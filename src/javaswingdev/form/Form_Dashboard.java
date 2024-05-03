@@ -82,22 +82,22 @@ Connection con;
 public class StatusCellRenderer extends DefaultTableCellRenderer {
     
     @Override
-    public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+   public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
         Component cellComponent = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
-        
-        // Vérifier la valeur de la colonne "STATUT"
+
+        // Vérifier la valeur de la colonne "STATUS"
         String status = (String) value;
         if ("en cours".equals(status)) {
-            cellComponent.setBackground(Color.BLUE); // Bleu pour "en cours"
+            cellComponent.setBackground(new Color(173, 216, 230)); // Bleu clair pour "en cours" (Color.CYAN)
         } else if ("annulée".equals(status)) {
-            cellComponent.setBackground(Color.RED); // Rouge pour "annulée"
+            cellComponent.setBackground(new Color(255, 192, 203)); // Rouge clair pour "annulée"
         } else if ("terminée".equals(status)) {
-            cellComponent.setBackground(Color.GREEN); // Vert pour "terminée"
+            cellComponent.setBackground(new Color(144, 238, 144)); // Vert clair pour "terminée"
         } else {
             // Couleur par défaut pour les autres valeurs
             cellComponent.setBackground(table.getBackground());
         }
-        
+
         return cellComponent;
     }
 }
