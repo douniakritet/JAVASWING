@@ -1,5 +1,5 @@
-# java-ui-dashboard-011
+# javaswing
 Date : 20/04/2024<br/>
-How to coding in java
+java swing Gestion d'une galerie d'art virtuelle
 <br/><br/>
 "# JAVASWING" 
