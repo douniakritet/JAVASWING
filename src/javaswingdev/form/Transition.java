@@ -1,31 +1,131 @@
 package javaswingdev.form;
 
+import java.awt.Component;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
+import java.sql.SQLException;
+import java.util.Vector;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javaswingdev.card.ModelCard;
+import javaswingdev.main.Add_Transition;
+import javax.swing.JTable;
+import javax.swing.SwingConstants;
+import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.DefaultTableModel;
+import raven.cell.TableActionCellEditor;
+import raven.cell.TableActionCellRender;
+import raven.cell.TableActionEvent;
 
 public class Transition extends javax.swing.JPanel {
 
     public Transition() {
         initComponents();
-        init();
+        Connect(); // Connexion à la base de données
+    Fetch(); // Récupérer les données de la base de données
+    init(); // Initialiser les autres composants personnalisés
+TableActionEvent event = new TableActionEvent() {
+            @Override
+            public void onEdit(int row) {
+                System.out.println("Edit row : " + row);
+            }
+
+            @Override
+            public void onDelete(int row) {
+                if (table.isEditing()) {
+                    table.getCellEditor().stopCellEditing();
+                }
+                DefaultTableModel model = (DefaultTableModel) table.getModel();
+                model.removeRow(row);
+            }
+
+            
+        };
+        table.getColumnModel().getColumn(6).setCellRenderer(new TableActionCellRender());
+        table.getColumnModel().getColumn(6).setCellEditor(new TableActionCellEditor(event));
+        table.getColumnModel().getColumn(0).setCellRenderer(new DefaultTableCellRenderer() {
+            @Override
+            public Component getTableCellRendererComponent(JTable jtable, Object o, boolean bln, boolean bln1, int i, int i1) {
+                setHorizontalAlignment(SwingConstants.LEFT);
+                return super.getTableCellRendererComponent(jtable, o, bln, bln1, i, i1);
+            }
+        });
+         table.getColumnModel().getColumn(1).setCellRenderer(new DefaultTableCellRenderer() {
+            @Override
+            public Component getTableCellRendererComponent(JTable jtable, Object o, boolean bln, boolean bln1, int i, int i1) {
+                setHorizontalAlignment(SwingConstants.LEFT);
+                return super.getTableCellRendererComponent(jtable, o, bln, bln1, i, i1);
+            }
+        });
+          table.getColumnModel().getColumn(2).setCellRenderer(new DefaultTableCellRenderer() {
+            @Override
+            public Component getTableCellRendererComponent(JTable jtable, Object o, boolean bln, boolean bln1, int i, int i1) {
+                setHorizontalAlignment(SwingConstants.LEFT);
+                return super.getTableCellRendererComponent(jtable, o, bln, bln1, i, i1);
+            }
+        });
+           table.getColumnModel().getColumn(3).setCellRenderer(new DefaultTableCellRenderer() {
+            @Override
+            public Component getTableCellRendererComponent(JTable jtable, Object o, boolean bln, boolean bln1, int i, int i1) {
+                setHorizontalAlignment(SwingConstants.LEFT);
+                return super.getTableCellRendererComponent(jtable, o, bln, bln1, i, i1);
+            }
+        });           table.getColumnModel().getColumn(4).setCellRenderer(new DefaultTableCellRenderer() {
+            @Override
+            public Component getTableCellRendererComponent(JTable jtable, Object o, boolean bln, boolean bln1, int i, int i1) {
+                setHorizontalAlignment(SwingConstants.LEFT);
+                return super.getTableCellRendererComponent(jtable, o, bln, bln1, i, i1);
+            }
+        });
+                   table.getColumnModel().getColumn(5).setCellRenderer(new DefaultTableCellRenderer() {
+            @Override
+            public Component getTableCellRendererComponent(JTable jtable, Object o, boolean bln, boolean bln1, int i, int i1) {
+                setHorizontalAlignment(SwingConstants.LEFT);
+                return super.getTableCellRendererComponent(jtable, o, bln, bln1, i, i1);
+            }
+        });
     }
+Connection con;
+    com.mysql.jdbc.PreparedStatement pst;
+    ResultSet rs;
+    public void Connect(){
+        try {
+            Class.forName("com.mysql.jdbc.Driver");
+            con = DriverManager.getConnection("jdbc:mysql://localhost/art","root","");
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(Artistes.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex) {
+            Logger.getLogger(Artistes.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    private void Fetch(){
+    int q;
+    try {
+        pst = (com.mysql.jdbc.PreparedStatement) con.prepareStatement("SELECT * FROM transaction");
+        rs = pst.executeQuery();
+        ResultSetMetaData rss = rs.getMetaData();
+        q = rss.getColumnCount();
+        DefaultTableModel df = (DefaultTableModel)table.getModel();
+        df.setRowCount(0);
+        while(rs.next()){
+            Vector<Object> v2 = new Vector<>();
+            for(int a=1;a<=q;a++){
+                v2.add(rs.getString(a)); // Use a 1-based index for ResultSet
+            }
+           
+           
+            df.addRow(v2);
+        }
+    } catch (SQLException ex) {
+        Logger.getLogger(Artistes.class.getName()).log(Level.SEVERE, null, ex);
+    }
+}
 
     private void init() {
         table.fixTable(jScrollPane1);
-        table.addRow(new Object[]{"1", "Mike Bhand", "mikebhand@gmail.com", "Admin", "25 Apr,2018"});
-        table.addRow(new Object[]{"2", "Andrew Strauss", "andrewstrauss@gmail.com", "Editor", "25 Apr,2018"});
-        table.addRow(new Object[]{"3", "Ross Kopelman", "rosskopelman@gmail.com", "Subscriber", "25 Apr,2018"});
-        table.addRow(new Object[]{"4", "Mike Hussy", "mikehussy@gmail.com", "Admin", "25 Apr,2018"});
-        table.addRow(new Object[]{"5", "Kevin Pietersen", "kevinpietersen@gmail.com", "Admin", "25 Apr,2018"});
-        table.addRow(new Object[]{"6", "Andrew Strauss", "andrewstrauss@gmail.com", "Editor", "25 Apr,2018"});
-        table.addRow(new Object[]{"7", "Ross Kopelman", "rosskopelman@gmail.com", "Subscriber", "25 Apr,2018"});
-        table.addRow(new Object[]{"8", "Mike Hussy", "mikehussy@gmail.com", "Admin", "25 Apr,2018"});
-        table.addRow(new Object[]{"9", "Kevin Pietersen", "kevinpietersen@gmail.com", "Admin", "25 Apr,2018"});
-        table.addRow(new Object[]{"10", "Kevin Pietersen", "kevinpietersen@gmail.com", "Admin", "25 Apr,2018"});
-        table.addRow(new Object[]{"11", "Andrew Strauss", "andrewstrauss@gmail.com", "Editor", "25 Apr,2018"});
-        table.addRow(new Object[]{"12", "Ross Kopelman", "rosskopelman@gmail.com", "Subscriber", "25 Apr,2018"});
-        table.addRow(new Object[]{"13", "Mike Hussy", "mikehussy@gmail.com", "Admin", "25 Apr,2018"});
-        table.addRow(new Object[]{"14", "Kevin Pietersen", "kevinpietersen@gmail.com", "Admin", "25 Apr,2018"});
-
+        
         //  init card data
         card1.setData(new ModelCard(null, null, null, "$ 500.00", "Report Income Monthly"));
         card2.setData(new ModelCard(null, null, null, "$ 800.00", "Report Expense Monthly"));
@@ -42,6 +142,7 @@ public class Transition extends javax.swing.JPanel {
         roundPanel1 = new javaswingdev.swing.RoundPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         table = new javaswingdev.swing.table.Table();
+        jButton3 = new javax.swing.JButton();
 
         setOpaque(false);
 
@@ -62,11 +163,11 @@ public class Transition extends javax.swing.JPanel {
 
             },
             new String [] {
-                "ID", "ID TABLE", "ID EXPOSITION", "CLIENT NAME", "DATE OF SELL", "STATUS"
+                "ID", "ID TABLE", "ID EXPOSITION", "CLIENT NAME", "DATE OF SELL", "STATUS", "ACTION"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, false, false, false, true
+                false, false, false, false, false, true, true
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -74,6 +175,19 @@ public class Transition extends javax.swing.JPanel {
             }
         });
         jScrollPane1.setViewportView(table);
+
+        jButton3.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jButton3.setForeground(new java.awt.Color(25, 118, 211));
+        jButton3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icon/icons8-add-30.png"))); // NOI18N
+        jButton3.setText("Add Transition");
+        jButton3.setBorder(null);
+        jButton3.setContentAreaFilled(false);
+        jButton3.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        jButton3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton3jButton1ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout roundPanel1Layout = new javax.swing.GroupLayout(roundPanel1);
         roundPanel1.setLayout(roundPanel1Layout);
@@ -83,11 +197,15 @@ public class Transition extends javax.swing.JPanel {
                 .addContainerGap()
                 .addComponent(jScrollPane1)
                 .addContainerGap())
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, roundPanel1Layout.createSequentialGroup()
+                .addGap(0, 0, Short.MAX_VALUE)
+                .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 156, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
         roundPanel1Layout.setVerticalGroup(
             roundPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(roundPanel1Layout.createSequentialGroup()
-                .addContainerGap()
+                .addComponent(jButton3)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
@@ -122,10 +240,25 @@ public class Transition extends javax.swing.JPanel {
         );
     }// </editor-fold>//GEN-END:initComponents
 
+    private void jButton3jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3jButton1ActionPerformed
+        // TODO add your handling code here:
+        try {
+            setVisible(false);
+
+            // Create and display the Add_Artiste frame
+            Add_Transition addArtisteFrame = new Add_Transition();
+            addArtisteFrame.setVisible(true);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            // Add more specific error handling or logging here
+        }
+    }//GEN-LAST:event_jButton3jButton1ActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javaswingdev.card.Card card1;
     private javaswingdev.card.Card card2;
     private javaswingdev.card.Card card3;
+    private javax.swing.JButton jButton3;
     private javax.swing.JScrollPane jScrollPane1;
     private javaswingdev.swing.RoundPanel roundPanel1;
     private javaswingdev.swing.table.Table table;

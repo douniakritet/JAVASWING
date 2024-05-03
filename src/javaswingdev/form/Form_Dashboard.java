@@ -1,36 +1,106 @@
 package javaswingdev.form;
 
+import java.awt.Component;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
+import java.sql.SQLException;
+import java.util.Vector;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javaswingdev.card.ModelCard;
+import javax.swing.JTable;
+import javax.swing.SwingConstants;
+import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.DefaultTableModel;
+import raven.cell.TableActionCellEditor;
+import raven.cell.TableActionCellRender;
+import raven.cell.TableActionEvent;
+import java.awt.Color;
+import java.awt.Component;
+import javax.swing.JTable;
+import javax.swing.table.DefaultTableCellRenderer;
 
 public class Form_Dashboard extends javax.swing.JPanel {
 
     public Form_Dashboard() {
-        initComponents();
-        init();
+     initComponents();
+        Connect(); // Connexion à la base de données
+        Fetch(); // Récupérer les données de la base de données
+        init(); // Initialiser les autres composants personnalisés
+
+        // Utilisez StatusCellRenderer pour le rendu des cellules de la colonne "STATUS"
+        table.getColumnModel().getColumn(5).setCellRenderer(new StatusCellRenderer());
     }
+
+Connection con;
+    com.mysql.jdbc.PreparedStatement pst;
+    ResultSet rs;
+    public void Connect(){
+        try {
+            Class.forName("com.mysql.jdbc.Driver");
+            con = DriverManager.getConnection("jdbc:mysql://localhost/art","root","");
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(Artistes.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex) {
+            Logger.getLogger(Artistes.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    private void Fetch(){
+    int q;
+    try {
+        pst = (com.mysql.jdbc.PreparedStatement) con.prepareStatement("SELECT * FROM transaction");
+        rs = pst.executeQuery();
+        ResultSetMetaData rss = rs.getMetaData();
+        q = rss.getColumnCount();
+        DefaultTableModel df = (DefaultTableModel)table.getModel();
+        df.setRowCount(0);
+        while(rs.next()){
+            Vector<Object> v2 = new Vector<>();
+            for(int a=1;a<=q;a++){
+                v2.add(rs.getString(a)); // Use a 1-based index for ResultSet
+            }
+           
+           
+            df.addRow(v2);
+        }
+    } catch (SQLException ex) {
+        Logger.getLogger(Artistes.class.getName()).log(Level.SEVERE, null, ex);
+    }
+}
 
     private void init() {
         table.fixTable(jScrollPane1);
-        table.addRow(new Object[]{"1", "Mike Bhand", "mikebhand@gmail.com", "Admin", "25 Apr,2018"});
-        table.addRow(new Object[]{"2", "Andrew Strauss", "andrewstrauss@gmail.com", "Editor", "25 Apr,2018"});
-        table.addRow(new Object[]{"3", "Ross Kopelman", "rosskopelman@gmail.com", "Subscriber", "25 Apr,2018"});
-        table.addRow(new Object[]{"4", "Mike Hussy", "mikehussy@gmail.com", "Admin", "25 Apr,2018"});
-        table.addRow(new Object[]{"5", "Kevin Pietersen", "kevinpietersen@gmail.com", "Admin", "25 Apr,2018"});
-        table.addRow(new Object[]{"6", "Andrew Strauss", "andrewstrauss@gmail.com", "Editor", "25 Apr,2018"});
-        table.addRow(new Object[]{"7", "Ross Kopelman", "rosskopelman@gmail.com", "Subscriber", "25 Apr,2018"});
-        table.addRow(new Object[]{"8", "Mike Hussy", "mikehussy@gmail.com", "Admin", "25 Apr,2018"});
-        table.addRow(new Object[]{"9", "Kevin Pietersen", "kevinpietersen@gmail.com", "Admin", "25 Apr,2018"});
-        table.addRow(new Object[]{"10", "Kevin Pietersen", "kevinpietersen@gmail.com", "Admin", "25 Apr,2018"});
-        table.addRow(new Object[]{"11", "Andrew Strauss", "andrewstrauss@gmail.com", "Editor", "25 Apr,2018"});
-        table.addRow(new Object[]{"12", "Ross Kopelman", "rosskopelman@gmail.com", "Subscriber", "25 Apr,2018"});
-        table.addRow(new Object[]{"13", "Mike Hussy", "mikehussy@gmail.com", "Admin", "25 Apr,2018"});
-        table.addRow(new Object[]{"14", "Kevin Pietersen", "kevinpietersen@gmail.com", "Admin", "25 Apr,2018"});
-
+        
         //  init card data
         card1.setData(new ModelCard(null, null, null, "$ 500.00", "Report Income Monthly"));
         card2.setData(new ModelCard(null, null, null, "$ 800.00", "Report Expense Monthly"));
         card3.setData(new ModelCard(null, null, null, "$ 300.00", "Report Profit Monthly"));
     }
+
+public class StatusCellRenderer extends DefaultTableCellRenderer {
+    
+    @Override
+    public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+        Component cellComponent = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+        
+        // Vérifier la valeur de la colonne "STATUT"
+        String status = (String) value;
+        if ("en cours".equals(status)) {
+            cellComponent.setBackground(Color.BLUE); // Bleu pour "en cours"
+        } else if ("annulée".equals(status)) {
+            cellComponent.setBackground(Color.RED); // Rouge pour "annulée"
+        } else if ("terminée".equals(status)) {
+            cellComponent.setBackground(Color.GREEN); // Vert pour "terminée"
+        } else {
+            // Couleur par défaut pour les autres valeurs
+            cellComponent.setBackground(table.getBackground());
+        }
+        
+        return cellComponent;
+    }
+}
 
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
@@ -62,11 +132,11 @@ public class Form_Dashboard extends javax.swing.JPanel {
 
             },
             new String [] {
-                "#", "Name", "Email", "Position", "Date Join"
+                "ID", "ID TABLE", "ID EXPOSITION", "CLIENT NAME", "SELL DATE", "SATATUS"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, false, false, false
+                false, false, false, false, false, true
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
