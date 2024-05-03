@@ -9,11 +9,14 @@ import java.sql.*;
 import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javaswingdev.main.Update_Arr;
 import javaswingdev.main.dashboard;
 import javaswingdev.main.login;
 import javax.swing.JButton;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTable;
+import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
@@ -23,7 +26,80 @@ import raven.cell.TableActionCellRender;
 import raven.cell.TableActionEvent;
 
 public class Artistes extends javax.swing.JPanel {
-public Artistes() {
+    public Artistes() {
+    initComponents(); // Initialiser les composants Swing
+    Connect(); // Connexion à la base de données
+    Fetch(); // Récupérer les données de la base de données
+    init(); // Initialiser les autres composants personnalisés
+    
+    // Initialisez votre TableActionEvent ici
+    TableActionEvent event = new TableActionEvent() {
+        @Override
+        public void onEdit(int rowIndex) {
+           int row = table.getSelectedRow();
+            if (row != -1) {
+                String idToUpdate = table.getModel().getValueAt(row, 0).toString();
+                String name = table.getModel().getValueAt(row, 1).toString();
+                String nationality = table.getModel().getValueAt(row, 2).toString();
+                String dateOfBirth = table.getModel().getValueAt(row, 3).toString();
+
+                // Assuming txtId is a JTextField for ID
+                JTextField txtId = new JTextField();
+                Update_Arr updateForm = new Update_Arr();
+                updateForm.setVisible(true);
+                updateForm.setArtistData(idToUpdate, name, nationality, dateOfBirth);
+            } else {
+                JOptionPane.showMessageDialog(null, "Please select a row to update.");
+            }   // Add more specific error handling or logging here
+    
+           
+        }
+
+        @Override
+        public void onDelete(int row) {
+            if (table.isEditing()) {
+                table.getCellEditor().stopCellEditing();
+            }
+            DefaultTableModel model = (DefaultTableModel) table.getModel();
+            model.removeRow(row);
+        }
+    };
+
+    // Ajoutez le renderer et l'éditeur à votre colonne de table
+    table.getColumnModel().getColumn(4).setCellRenderer(new TableActionCellRender());
+    table.getColumnModel().getColumn(4).setCellEditor(new TableActionCellEditor(event));
+        table.getColumnModel().getColumn(0).setCellRenderer(new DefaultTableCellRenderer() {
+            @Override
+            public Component getTableCellRendererComponent(JTable jtable, Object o, boolean bln, boolean bln1, int i, int i1) {
+                setHorizontalAlignment(SwingConstants.LEFT);
+                return super.getTableCellRendererComponent(jtable, o, bln, bln1, i, i1);
+            }
+        });
+         table.getColumnModel().getColumn(1).setCellRenderer(new DefaultTableCellRenderer() {
+            @Override
+            public Component getTableCellRendererComponent(JTable jtable, Object o, boolean bln, boolean bln1, int i, int i1) {
+                setHorizontalAlignment(SwingConstants.LEFT);
+                return super.getTableCellRendererComponent(jtable, o, bln, bln1, i, i1);
+            }
+        });
+          table.getColumnModel().getColumn(2).setCellRenderer(new DefaultTableCellRenderer() {
+            @Override
+            public Component getTableCellRendererComponent(JTable jtable, Object o, boolean bln, boolean bln1, int i, int i1) {
+                setHorizontalAlignment(SwingConstants.LEFT);
+                return super.getTableCellRendererComponent(jtable, o, bln, bln1, i, i1);
+            }
+        });
+           table.getColumnModel().getColumn(3).setCellRenderer(new DefaultTableCellRenderer() {
+            @Override
+            public Component getTableCellRendererComponent(JTable jtable, Object o, boolean bln, boolean bln1, int i, int i1) {
+                setHorizontalAlignment(SwingConstants.LEFT);
+                return super.getTableCellRendererComponent(jtable, o, bln, bln1, i, i1);
+            }
+        });
+           
+}
+
+/*public Artistes() {
     initComponents(); // Initialiser les composants Swing
     Connect(); // Connexion à la base de données
     Fetch(); // Récupérer les données de la base de données
@@ -31,8 +107,28 @@ public Artistes() {
 TableActionEvent event = new TableActionEvent() {
             @Override
             public void onEdit(int row) {
-                System.out.println("Edit row : " + row);
+                int row = table.getSelectedRow();
+                if (row != -1) {
+                    String id = table.getModel().getValueAt(row, 0).toString();
+                    String name = table.getModel().getValueAt(row, 1).toString();
+                    String nationality = table.getModel().getValueAt(row, 2).toString();
+                    String dateOfBirth = table.getModel().getValueAt(row, 3).toString();
+
+                    // Assuming txtId is a JTextField for ID
+                    JTextField txtId = new JTextField();
+                    Update_Arr updateForm = new Update_Arr();
+                    updateForm.setVisible(true);
+                    updateForm.setArtistData(id, name, nationality, dateOfBirth);
+                } else {
+                    JOptionPane.showMessageDialog(null, "Please select a row to update.");
+                }
             }
+        });
+    } catch (SQLException ex) {
+        ex.printStackTrace();
+        // Handle the SQL exception here
+    }
+}       }
 
             @Override
             public void onDelete(int row) {
@@ -76,7 +172,7 @@ TableActionEvent event = new TableActionEvent() {
             }
         });
     // Ajoutez le reste de votre code personnalisé ici
-}
+}*/
 
     /*public Artistes() {
         //initComponents();
@@ -289,11 +385,11 @@ TableActionEvent event = new TableActionEvent() {
         roundPanel1Layout.setVerticalGroup(
             roundPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(roundPanel1Layout.createSequentialGroup()
-                .addGap(57, 57, 57)
+                .addContainerGap()
                 .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(27, 27, 27)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(72, Short.MAX_VALUE))
         );
 
         textFieldAnimation1.addActionListener(new java.awt.event.ActionListener() {
