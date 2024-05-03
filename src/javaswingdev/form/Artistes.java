@@ -9,7 +9,7 @@ import java.sql.*;
 import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javaswingdev.main.Update_Arr;
+import javaswingdev.main.Update_Arrr;
 import javaswingdev.main.dashboard;
 import javaswingdev.main.login;
 import javax.swing.JButton;
@@ -45,7 +45,7 @@ public class Artistes extends javax.swing.JPanel {
 
                 // Assuming txtId is a JTextField for ID
                 JTextField txtId = new JTextField();
-                Update_Arr updateForm = new Update_Arr();
+                Update_Arrr updateForm = new Update_Arrr();
                 updateForm.setVisible(true);
                 updateForm.setArtistData(idToUpdate, name, nationality, dateOfBirth);
             } else {
