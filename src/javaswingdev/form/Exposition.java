@@ -19,10 +19,6 @@ import raven.cell.TableActionCellEditor;
 import raven.cell.TableActionCellRender;
 import raven.cell.TableActionEvent;
 import java.sql.Date;
-import javaswingdev.main.Update_Arrr;
-import javaswingdev.main.Update_Exposition;
-import javax.swing.JOptionPane;
-import javax.swing.JTextField;
 public class Exposition extends javax.swing.JPanel {
 
     public Exposition() {
@@ -34,22 +30,7 @@ public class Exposition extends javax.swing.JPanel {
 TableActionEvent event = new TableActionEvent() {
             @Override
             public void onEdit(int row) {
-               int row1 = table.getSelectedRow();
-            if (row != -1) {
-                String idToUpdate = table.getModel().getValueAt(row, 0).toString();
-                String nom = table.getModel().getValueAt(row, 1).toString();
-                String dateDebut = table.getModel().getValueAt(row, 2).toString();
-                String dateFin = table.getModel().getValueAt(row, 3).toString();
-                String lieu = table.getModel().getValueAt(row, 4).toString();
-
-                // Assuming txtId is a JTextField for ID
-                JTextField txtId = new JTextField();
-                Update_Exposition updateForm = new Update_Exposition();
-                updateForm.setVisible(true);
-                updateForm.setArtistData(idToUpdate, nom, dateDebut, dateFin,lieu);
-            } else {
-                JOptionPane.showMessageDialog(null, "Please select a row to update.");
-            }  
+                System.out.println("Edit row : " + row);
             }
 
             @Override
@@ -111,8 +92,8 @@ TableActionEvent event = new TableActionEvent() {
         card2.setData(new ModelCard(null, null, null, "$ 800.00", "Report Expense Monthly"));
         card3.setData(new ModelCard(null, null, null, "$ 300.00", "Report Profit Monthly"));
     }
-Connection con;
-    com.mysql.jdbc.PreparedStatement pst;
+java.sql.Connection con;
+java.sql.PreparedStatement pst;
     ResultSet rs;
     public void Connect(){
         try {
@@ -148,7 +129,7 @@ Connection con;
 
 }
     @SuppressWarnings("unchecked")
-    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
+    // <editor-fold defaultstate="collapsed" desc="Generated Code">                          
     private void initComponents() {
 
         card1 = new javaswingdev.card.Card();
@@ -265,9 +246,9 @@ Connection con;
                 .addComponent(roundPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGap(30, 30, 30))
         );
-    }// </editor-fold>//GEN-END:initComponents
+    }// </editor-fold>                        
 
-    private void jButton3jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3jButton1ActionPerformed
+    private void jButton3jButton1ActionPerformed(java.awt.event.ActionEvent evt) {                                                 
         // TODO add your handling code here:
         try {
             setVisible(false);
@@ -279,13 +260,41 @@ Connection con;
             ex.printStackTrace();
             // Add more specific error handling or logging here
         }
-    }//GEN-LAST:event_jButton3jButton1ActionPerformed
+    }                                                
 
-    private void textFieldAnimation1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_textFieldAnimation1ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_textFieldAnimation1ActionPerformed
+    private void searchExposition(String searchTerm) {
+    try {
+        // Prepare the SQL statement to search for expositions
+        String query = "SELECT * FROM exposition WHERE nom LIKE ? OR lieu LIKE ?";
+        pst = con.prepareStatement(query);
+        pst.setString(1, "%" + searchTerm + "%"); // Search by name
+        pst.setString(2, "%" + searchTerm + "%"); // Search by location
+        rs = pst.executeQuery();
 
-    // Variables declaration - do not modify//GEN-BEGIN:variables
+        // Clear the table before adding search results
+        DefaultTableModel model = (DefaultTableModel) table.getModel();
+        model.setRowCount(0);
+
+        // Populate the table with search results
+        while (rs.next()) {
+            Vector<Object> row = new Vector<>();
+            row.add(rs.getString("idE")); // Assuming "idE" is the column name for exposition ID
+            row.add(rs.getString("nom")); // Name of the exposition
+            row.add(rs.getString("dateDebut")); // Start date of the exposition
+            row.add(rs.getString("dateFin")); // End date of the exposition
+            row.add(rs.getString("lieu")); // Location of the exposition
+            model.addRow(row);
+        }
+    } catch (SQLException ex) {
+        Logger.getLogger(Exposition.class.getName()).log(Level.SEVERE, null, ex);
+    }
+}
+    private void textFieldAnimation1ActionPerformed(java.awt.event.ActionEvent evt) {                                                    
+        String searchTerm = textFieldAnimation1.getText().trim();
+    searchExposition(searchTerm);
+    }                                                   
+
+    // Variables declaration - do not modify                     
     private javaswingdev.card.Card card1;
     private javaswingdev.card.Card card2;
     private javaswingdev.card.Card card3;
@@ -294,5 +303,5 @@ Connection con;
     private javaswingdev.swing.RoundPanel roundPanel1;
     private javaswingdev.swing.table.Table table;
     private swing.TextFieldAnimation textFieldAnimation1;
-    // End of variables declaration//GEN-END:variables
+    // End of variables declaration                   
 }
