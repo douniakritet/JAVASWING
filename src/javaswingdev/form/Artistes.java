@@ -25,13 +25,19 @@ import javax.swing.table.TableCellRenderer;
 import raven.cell.TableActionCellEditor;
 import raven.cell.TableActionCellRender;
 import raven.cell.TableActionEvent;
+import swing.EventCallBack;
+import swing.EventTextField;
+import swing.TextFieldAnimation;
+
 
 public class Artistes extends javax.swing.JPanel {
+    private TextFieldAnimation textField;
     public Artistes() {
     initComponents(); // Initialiser les composants Swing
     Connect(); // Connexion à la base de données
     Fetch(); // Récupérer les données de la base de données
-    init(); // Initialiser les autres composants personnalisés
+    init();
+   
     
     // Initialisez votre TableActionEvent ici
     TableActionEvent event = new TableActionEvent() {
@@ -266,8 +272,8 @@ TableActionEvent event = new TableActionEvent() {
             }
         });
     }
-    Connection con;
-    com.mysql.jdbc.PreparedStatement pst;
+    java.sql.Connection con;
+java.sql.PreparedStatement pst;
     ResultSet rs;
     public void Connect(){
         try {
@@ -354,7 +360,7 @@ TableActionEvent event = new TableActionEvent() {
     }
 
     @SuppressWarnings("unchecked")
-    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
+    // <editor-fold defaultstate="collapsed" desc="Generated Code">                          
     private void initComponents() {
 
         card1 = new javaswingdev.card.Card();
@@ -473,9 +479,9 @@ TableActionEvent event = new TableActionEvent() {
                 .addComponent(roundPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGap(30, 30, 30))
         );
-    }// </editor-fold>//GEN-END:initComponents
+    }// </editor-fold>                        
 
-    private void jButton3jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3jButton1ActionPerformed
+    private void jButton3jButton1ActionPerformed(java.awt.event.ActionEvent evt) {                                                 
         // TODO add your handling code here:
         try {
         setVisible(false);
@@ -487,13 +493,42 @@ TableActionEvent event = new TableActionEvent() {
         ex.printStackTrace();
         // Add more specific error handling or logging here
     }
-    }//GEN-LAST:event_jButton3jButton1ActionPerformed
+    }                                                
 
-    private void textFieldAnimation1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_textFieldAnimation1ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_textFieldAnimation1ActionPerformed
+    private void searchArtist(String searchTerm) {
+    try {
+        // Prepare the SQL statement to search for artists
+        String query = "SELECT * FROM artiste WHERE nom LIKE ? OR nationalite LIKE ?";
+        pst = con.prepareStatement(query);
+        pst.setString(1, "%" + searchTerm + "%"); // Search by name
+        pst.setString(2, "%" + searchTerm + "%"); // Search by nationality
+        rs = pst.executeQuery();
 
-    // Variables declaration - do not modify//GEN-BEGIN:variables
+        // Clear the table before adding search results
+        DefaultTableModel model = (DefaultTableModel) table.getModel();
+        model.setRowCount(0);
+
+        // Populate the table with search results
+        while (rs.next()) {
+            Vector<Object> row = new Vector<>();
+            row.add(rs.getString("idAr"));
+            row.add(rs.getString("nom"));
+            row.add(rs.getString("nationalite"));
+            row.add(rs.getString("dateNaissance"));
+            model.addRow(row);
+        }
+    } catch (SQLException ex) {
+        Logger.getLogger(Artistes.class.getName()).log(Level.SEVERE, null, ex);
+    }
+}
+
+    private void textFieldAnimation1ActionPerformed(java.awt.event.ActionEvent evt) {                                                    
+       String searchTerm = textFieldAnimation1.getText().trim();
+    searchArtist(searchTerm); // TODO add your handling code here:
+    }                                                   
+
+
+    // Variables declaration - do not modify                     
     private javaswingdev.card.Card card1;
     private javaswingdev.card.Card card2;
     private javaswingdev.card.Card card3;
@@ -502,5 +537,5 @@ TableActionEvent event = new TableActionEvent() {
     private javaswingdev.swing.RoundPanel roundPanel1;
     private javaswingdev.swing.table.Table table;
     private swing.TextFieldAnimation textFieldAnimation1;
-    // End of variables declaration//GEN-END:variables
+    // End of variables declaration                   
 }
