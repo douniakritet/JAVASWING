@@ -6,6 +6,7 @@ import java.awt.event.ActionListener;
 import javaswingdev.main.Add_Arr;
 import javaswingdev.card.ModelCard;
 import java.sql.*;
+import java.sql.Connection;
 import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -56,13 +57,54 @@ public class Artistes extends javax.swing.JPanel {
         }
 
         @Override
-        public void onDelete(int row) {
-            if (table.isEditing()) {
-                table.getCellEditor().stopCellEditing();
-            }
-            DefaultTableModel model = (DefaultTableModel) table.getModel();
-            model.removeRow(row);
-        }
+public void onDelete(int row) {
+    if (table.isEditing()) {
+        table.getCellEditor().stopCellEditing();
+    }
+    DefaultTableModel model = (DefaultTableModel) table.getModel();
+    
+    // Get the ID of the artist to be deleted
+    String idToDelete = model.getValueAt(row, 0).toString();
+    
+    // Remove the row from the table model
+    model.removeRow(row);
+    
+    // Delete the corresponding record from the database
+  try {
+    // Establish database connection
+    Connection con = DriverManager.getConnection("jdbc:mysql://localhost/art", "root", "");
+
+    // Prepare the delete statement for "transaction" table
+    PreparedStatement pstTransaction = con.prepareStatement("DELETE FROM transaction WHERE idOeuvre IN (SELECT idO FROM oeuvre WHERE idArtiste = ?)");
+    pstTransaction.setString(1, idToDelete);
+    pstTransaction.executeUpdate();
+
+    // Prepare the delete statement for "oeuvre" table
+    PreparedStatement pstOeuvre = con.prepareStatement("DELETE FROM oeuvre WHERE idArtiste = ?");
+    pstOeuvre.setString(1, idToDelete);
+    pstOeuvre.executeUpdate();
+    
+    // Prepare the delete statement for "artiste" table
+    PreparedStatement pstArtiste = con.prepareStatement("DELETE FROM artiste WHERE idAr = ?");
+    pstArtiste.setString(1, idToDelete);
+    pstArtiste.executeUpdate();
+
+    // Close the statements
+    pstTransaction.close();
+    pstOeuvre.close();
+    pstArtiste.close();
+
+    // Close the connection
+    con.close();
+} catch (SQLException ex) {
+    // Handle any SQL exceptions
+    ex.printStackTrace();
+    // You might want to show an error message to the user here
+}
+
+
+}
+
     };
 
     // Ajoutez le renderer et l'éditeur à votre colonne de table

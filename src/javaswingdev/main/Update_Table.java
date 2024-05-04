@@ -24,6 +24,7 @@ import java.sql.ResultSet;
 import javaswingdev.form.Artistes;
 import javaswingdev.form.Artistes;
 import javax.naming.spi.DirStateFactory.Result;
+import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
@@ -32,12 +33,14 @@ import javax.swing.filechooser.FileNameExtensionFilter;
  *
  * @author ME1
  */
-public class Add_Table extends javax.swing.JFrame {
+public class Update_Table extends javax.swing.JFrame {
+          private String idToUpdate;
+
 
     /**
      * Creates new form login
      */
-    public Add_Table() {
+    public Update_Table() {
         initComponents();
        // txtusername.setBackground(new java.awt.Color(0,0,0,1));
        // txtusername1.setBackground(new java.awt.Color(0,0,0,1));
@@ -86,7 +89,7 @@ String ImgPath =null;
             }
 
         } catch (SQLException ex) {
-            Logger.getLogger(Add_Table.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(Update_Table.class.getName()).log(Level.SEVERE, null, ex);
         }
    
    
@@ -107,7 +110,7 @@ String ImgPath =null;
         jLabel6 = new javax.swing.JLabel();
         jButton1 = new javax.swing.JButton();
         jLabel10 = new javax.swing.JLabel();
-        title = new javax.swing.JLabel();
+        xx = new javax.swing.JLabel();
         jLabel12 = new javax.swing.JLabel();
         jLabel13 = new javax.swing.JLabel();
         jButton2 = new javax.swing.JButton();
@@ -120,7 +123,7 @@ String ImgPath =null;
         jLabel18 = new javax.swing.JLabel();
         image = new javax.swing.JLabel();
         jButton3 = new javax.swing.JButton();
-        titre = new javax.swing.JTextField();
+        title = new javax.swing.JTextField();
         description = new javax.swing.JTextField();
         prix = new javax.swing.JTextField();
 
@@ -167,9 +170,9 @@ String ImgPath =null;
         jLabel10.setText("Title");
         jPanel2.add(jLabel10, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 150, 341, -1));
 
-        title.setForeground(new java.awt.Color(255, 255, 255));
-        title.setText("_________________________________________");
-        jPanel2.add(title, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 180, 290, 39));
+        xx.setForeground(new java.awt.Color(255, 255, 255));
+        xx.setText("_________________________________________");
+        jPanel2.add(xx, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 180, 290, 39));
 
         jLabel12.setFont(new java.awt.Font("Segoe UI", 0, 13)); // NOI18N
         jLabel12.setForeground(new java.awt.Color(199, 226, 255));
@@ -229,7 +232,7 @@ String ImgPath =null;
             }
         });
         jPanel2.add(jButton3, new org.netbeans.lib.awtextra.AbsoluteConstraints(340, 590, -1, -1));
-        jPanel2.add(titre, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 170, 240, 30));
+        jPanel2.add(title, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 170, 240, 30));
 
         description.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -275,7 +278,7 @@ String ImgPath =null;
 public boolean checkInputs() {
     if (IDlist.getSelectedItem() == null 
             || description.getText()== null 
-            || titre.getText() == null
+            || title.getText() == null
             || prix.getText() == null
             || date.getDate() == null
            /* || ImgPath == null*/) { // Vérifie si une image a été sélectionnée
@@ -294,42 +297,110 @@ public boolean checkInputs() {
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
                                                
   if (checkInputs() /*&& ImgPath != null*/) {
-        try {
-            String selectedID = (String) IDlist.getSelectedItem();
-            String title = titre.getText();
-            Date date1 = date.getDate();
-            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-            String desc = description.getText();
-            String prix1 = prix.getText();
-            String date2 = dateFormat.format(date1);
-           InputStream img = new FileInputStream(new File(ImgPath));
+       String artiste = IDlist.getSelectedItem().toString(); 
+       String titre = xx.getText(); 
 
-            PreparedStatement pst = (PreparedStatement) con.prepareStatement("INSERT INTO oeuvre(idArtiste, titre, aneeCreation, description, prix, image)"
-                    + " VALUES(?,?,?,?,?,?)");
-            pst.setString(1, selectedID);
-            pst.setString(2, title);
-            pst.setString(3, date2);
-            pst.setString(4, desc);
-            pst.setString(5, prix1);
-            pst.setBlob(6, img);
+  
+        Date date1 = date.getDate();
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        String datee = dateFormat.format(date1);
+        
+        String desc = description.getText();
+        String price = prix.getText();
+        String img = image.getText();
 
-            int k = pst.executeUpdate();
-
-            if (k == 1) {
-                JOptionPane.showMessageDialog(this, "Record Added Successfully!");
-            } else {
-                JOptionPane.showMessageDialog(this, "Record Failed!");
-            }
-        } catch (Exception ex) {
-            JOptionPane.showMessageDialog(this, "Error: " + ex.getMessage());
-        }
-    } else {
-        JOptionPane.showMessageDialog(this, "One Or More Fields Are Empty");
-    }
-
+        // Effectuez la mise à jour dans la base de données
+        updateArtistInDatabase(artiste,titre,datee,desc,price,img);
       
     }//GEN-LAST:event_jButton2ActionPerformed
 
+    }
+    
+    public void setArtistData(String idToUpdate, String artiste, String titre, String date2,String desc, String price, String img) {
+                this.idToUpdate = idToUpdate;
+
+         
+        // Utilisez SimpleDateFormat pour convertir la date de naissance de String en Date
+        try {
+        // Stockez les valeurs récupérées dans des variables
+        String selectedTable = artiste;
+        title.setText(titre);
+   
+        Date date1 = new SimpleDateFormat("yyyy-MM-dd").parse(date2);
+        date.setDate(date1);
+        
+        description.setText(desc);
+        prix.setText(price);
+ImageIcon icon = new ImageIcon(img);
+image.setIcon(icon);
+        // Définissez les valeurs des éléments de l'interface utilisateur
+        IDlist.setSelectedItem(selectedTable);
+      
+
+    } catch (ParseException ex) {
+        Logger.getLogger(Update_Exposition.class.getName()).log(Level.SEVERE, null, ex);
+    }    }
+   /* public void setArtistData(String idToUpdate, String artiste, String titre, String date2, String desc, String price, String imgPath) {
+    this.idToUpdate = idToUpdate;
+
+    // Utilisez SimpleDateFormat pour convertir la date de naissance de String en Date
+    try {
+        // Stockez les valeurs récupérées dans des variables
+        String selectedTable = artiste;
+        title.setText(titre);
+
+        Date date1 = new SimpleDateFormat("yyyy-MM-dd").parse(date2);
+        date.setDate(date1);
+
+        description.setText(desc);
+        prix.setText(price);
+        
+        // Charger l'image à partir du chemin imgPath
+        ImageIcon icon = new ImageIcon(imgPath);
+        // Définir l'icône sur le composant JLabel
+        image.setIcon(icon);
+
+        // Redimensionner l'image pour s'adapter au composant JLabel
+        Image img = icon.getImage().getScaledInstance(image.getWidth(), image.getHeight(), Image.SCALE_SMOOTH);
+        // Créer une nouvelle icône à partir de l'image redimensionnée
+        ImageIcon imageIcon = new ImageIcon(img);
+        // Définir l'icône redimensionnée sur le composant JLabel
+        image.setIcon(imageIcon);
+
+
+        // Définissez les valeurs des éléments de l'interface utilisateur
+        IDlist.setSelectedItem(selectedTable);
+
+    } catch (ParseException ex) {
+        Logger.getLogger(Update_Exposition.class.getName()).log(Level.SEVERE, null, ex);
+    }
+}*/
+
+    
+    
+    private void updateArtistInDatabase( String artiste, String title, String date, String desc, String price,String img) {
+        try {
+            // Préparez la requête SQL pour mettre à jour l'artiste
+            String query = "UPDATE oeuvre SET idArtiste=?, titre=?,aneeCreation=?,description=?,prix=?,image=? WHERE idO=?";
+            pst = (PreparedStatement) con.prepareStatement(query);
+            pst.setString(1, artiste);
+            pst.setString(2, title);
+            pst.setString(3, date);
+            pst.setString(4, desc);
+            pst.setString(5, price);
+            pst.setString(6, img);
+
+            // Set the idToUpdate in the query
+            pst.setString(7, idToUpdate);
+
+            // Exécutez la requête de mise à jour
+            int rowsAffected = pst.executeUpdate();
+
+            // Rest of your method...
+        } catch (SQLException ex) {
+            Logger.getLogger(Update_Arrr.class.getName()).log(Level.SEVERE, null, ex);
+        }
+   }
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
         // TODO add your handling code here:
         JFileChooser file = new JFileChooser();
@@ -371,14 +442,22 @@ public boolean checkInputs() {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(Add_Table.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Update_Table.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(Add_Table.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Update_Table.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(Add_Table.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Update_Table.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(Add_Table.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Update_Table.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
         //</editor-fold>
         //</editor-fold>
         //</editor-fold>
@@ -391,7 +470,7 @@ public boolean checkInputs() {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new Add_Table().setVisible(true);
+                new Update_Table().setVisible(true);
             }
         });
     }
@@ -417,8 +496,8 @@ public boolean checkInputs() {
     private javax.swing.JLabel jLabel6;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JTextField prix;
-    private javax.swing.JLabel title;
-    private javax.swing.JTextField titre;
+    private javax.swing.JTextField title;
+    private javax.swing.JLabel xx;
     // End of variables declaration//GEN-END:variables
 
     

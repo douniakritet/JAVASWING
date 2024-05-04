@@ -12,7 +12,11 @@ import java.util.logging.Logger;
 import javaswingdev.card.ModelCard;
 import javaswingdev.main.Add_Arr;
 import javaswingdev.main.Add_Table;
+import javaswingdev.main.Update_Exposition;
+import javaswingdev.main.Update_Table;
+import javax.swing.JOptionPane;
 import javax.swing.JTable;
+import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
@@ -30,8 +34,24 @@ public class Tables extends javax.swing.JPanel {
         TableActionEvent event = new TableActionEvent() {
             @Override
             public void onEdit(int row) {
-                System.out.println("Edit row : " + row);
-            }
+            int row3 = table.getSelectedRow();
+            if (row != -1) {
+                String idToUpdate = table.getModel().getValueAt(row, 0).toString();
+                String IDlist = table.getModel().getValueAt(row, 1).toString();
+                String titre = table.getModel().getValueAt(row, 2).toString();
+                String date = table.getModel().getValueAt(row, 3).toString();
+                String description = table.getModel().getValueAt(row, 4).toString();
+                String price = table.getModel().getValueAt(row, 5).toString();
+                String image = table.getModel().getValueAt(row, 6).toString();
+
+                // Assuming txtId is a JTextField for ID
+                JTextField txtId = new JTextField();
+                Update_Table updateForm = new Update_Table();
+                updateForm.setVisible(true);
+                updateForm.setArtistData(idToUpdate, IDlist, titre, date,description,price,image);
+            } else {
+                JOptionPane.showMessageDialog(null, "Please select a row to update.");
+            }              }
 
             @Override
             public void onDelete(int row) {

@@ -259,7 +259,7 @@ String ImgPath =null;
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
                                              
- String table = IDtable.getSelectedItem().toString(); 
+     String table = IDtable.getSelectedItem().toString(); 
  String exposition = IDexposition.getSelectedItem().toString();
         String nclient = client.getText();
         Date datte = datev.getDate();
