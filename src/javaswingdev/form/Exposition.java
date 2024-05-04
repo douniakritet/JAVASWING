@@ -19,6 +19,10 @@ import raven.cell.TableActionCellEditor;
 import raven.cell.TableActionCellRender;
 import raven.cell.TableActionEvent;
 import java.sql.Date;
+import javaswingdev.main.Update_Arrr;
+import javaswingdev.main.Update_Exposition;
+import javax.swing.JOptionPane;
+import javax.swing.JTextField;
 public class Exposition extends javax.swing.JPanel {
 
     public Exposition() {
@@ -30,7 +34,22 @@ public class Exposition extends javax.swing.JPanel {
 TableActionEvent event = new TableActionEvent() {
             @Override
             public void onEdit(int row) {
-                System.out.println("Edit row : " + row);
+               int row1 = table.getSelectedRow();
+            if (row != -1) {
+                String idToUpdate = table.getModel().getValueAt(row, 0).toString();
+                String nom = table.getModel().getValueAt(row, 1).toString();
+                String dateDebut = table.getModel().getValueAt(row, 2).toString();
+                String dateFin = table.getModel().getValueAt(row, 3).toString();
+                String lieu = table.getModel().getValueAt(row, 4).toString();
+
+                // Assuming txtId is a JTextField for ID
+                JTextField txtId = new JTextField();
+                Update_Exposition updateForm = new Update_Exposition();
+                updateForm.setVisible(true);
+                updateForm.setArtistData(idToUpdate, nom, dateDebut, dateFin,lieu);
+            } else {
+                JOptionPane.showMessageDialog(null, "Please select a row to update.");
+            }  
             }
 
             @Override

@@ -11,7 +11,11 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javaswingdev.card.ModelCard;
 import javaswingdev.main.Add_Transition;
+import javaswingdev.main.Update_Exposition;
+import javaswingdev.main.Update_Transition;
+import javax.swing.JOptionPane;
 import javax.swing.JTable;
+import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
@@ -29,8 +33,23 @@ public class Transition extends javax.swing.JPanel {
 TableActionEvent event = new TableActionEvent() {
             @Override
             public void onEdit(int row) {
-                System.out.println("Edit row : " + row);
-            }
+            int row2 = table.getSelectedRow();
+            if (row != -1) {
+                String idToUpdate = table.getModel().getValueAt(row, 0).toString();
+                String idOeuve = table.getModel().getValueAt(row, 1).toString();
+                String idExposition = table.getModel().getValueAt(row, 2).toString();
+                String nomClient = table.getModel().getValueAt(row, 3).toString();
+                String dateVente = table.getModel().getValueAt(row, 4).toString();
+                String statut = table.getModel().getValueAt(row, 5).toString();
+
+                // Assuming txtId is a JTextField for ID
+                JTextField txtId = new JTextField();
+                Update_Transition updateForm = new Update_Transition();
+                updateForm.setVisible(true);
+                updateForm.setArtistData(idToUpdate, idOeuve, idExposition, nomClient,dateVente,statut);
+            } else {
+                JOptionPane.showMessageDialog(null, "Please select a row to update.");
+            }              }
 
             @Override
             public void onDelete(int row) {

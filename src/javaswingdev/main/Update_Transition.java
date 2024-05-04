@@ -32,12 +32,13 @@ import javax.swing.filechooser.FileNameExtensionFilter;
  *
  * @author ME1
  */
-public class Add_Transition extends javax.swing.JFrame {
+public class Update_Transition extends javax.swing.JFrame {
+      private String idToUpdate;
 
     /**
      * Creates new form login
      */
-    public Add_Transition() {
+    public Update_Transition() {
         initComponents();
        // txtusername.setBackground(new java.awt.Color(0,0,0,1));
        // txtusername1.setBackground(new java.awt.Color(0,0,0,1));
@@ -75,7 +76,7 @@ String ImgPath =null;
             IDtable.addItem(rs.getString(1));
         }
     } catch (SQLException ex) {
-        Logger.getLogger(Add_Transition.class.getName()).log(Level.SEVERE, null, ex);
+        Logger.getLogger(Update_Transition.class.getName()).log(Level.SEVERE, null, ex);
     }
    
    
@@ -96,7 +97,7 @@ String ImgPath =null;
         jButton1 = new javax.swing.JButton();
         jLabel12 = new javax.swing.JLabel();
         jButton2 = new javax.swing.JButton();
-        date = new com.toedter.calendar.JDateChooser();
+        datev = new com.toedter.calendar.JDateChooser();
         IDtable = new javax.swing.JComboBox<>();
         jLabel16 = new javax.swing.JLabel();
         jLabel17 = new javax.swing.JLabel();
@@ -126,7 +127,7 @@ String ImgPath =null;
         jLabel3.setFont(new java.awt.Font("Segoe UI", 0, 32)); // NOI18N
         jLabel3.setForeground(new java.awt.Color(255, 255, 255));
         jLabel3.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel3.setText("Add Transition");
+        jLabel3.setText("Update Transition");
         jPanel2.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 10, 420, 41));
 
         jLabel5.setFont(new java.awt.Font("Segoe UI", 0, 13)); // NOI18N
@@ -152,7 +153,7 @@ String ImgPath =null;
 
         jButton2.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jButton2.setForeground(new java.awt.Color(25, 118, 211));
-        jButton2.setText("Add");
+        jButton2.setText("Update");
         jButton2.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         jButton2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -160,7 +161,7 @@ String ImgPath =null;
             }
         });
         jPanel2.add(jButton2, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 460, 100, 40));
-        jPanel2.add(date, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 300, 240, 30));
+        jPanel2.add(datev, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 300, 240, 30));
 
         IDtable.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
         IDtable.addActionListener(new java.awt.event.ActionListener() {
@@ -211,6 +212,11 @@ String ImgPath =null;
         jPanel2.add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 348, 341, 20));
 
         status.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        status.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                statusActionPerformed(evt);
+            }
+        });
         jPanel2.add(status, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 370, 240, 30));
 
         jLabel24.setForeground(new java.awt.Color(255, 255, 255));
@@ -252,41 +258,83 @@ String ImgPath =null;
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-                                               
- 
-        try {
-            String IDtable1 = (String) IDtable.getSelectedItem();
-            String IDexposition1 = (String) IDexposition.getSelectedItem();
-            String client1 = client.getText();
+                                             
+ String table = IDtable.getSelectedItem().toString(); 
+ String exposition = IDexposition.getSelectedItem().toString();
+        String nclient = client.getText();
+        Date datte = datev.getDate();
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+      String datee = dateFormat.format(datte);
+       
+        String statut = status.getSelectedItem().toString();
 
-            Date date1 = date.getDate();
-            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-            String date2 = dateFormat.format(date1);
-            String statut = (String) status.getSelectedItem();
-
-            PreparedStatement pst = (PreparedStatement) con.prepareStatement("INSERT INTO transaction(idOeuvre,idExposition, nomClient, dateVente, statut)"
-                    + " VALUES(?,?,?,?,?)");
-            pst.setString(1, IDtable1);
-            pst.setString(2, IDexposition1);
-            pst.setString(3, client1);
-            pst.setString(4, date2);
-            pst.setString(5, statut);
-          
-
-            int k = pst.executeUpdate();
-
-            if (k == 1) {
-                JOptionPane.showMessageDialog(this, "Record Added Successfully!");
-            } else {
-                JOptionPane.showMessageDialog(this, "Record Failed!");
-            }
-    } catch (Exception ex) {
-            JOptionPane.showMessageDialog(this, "Error: " + ex.getMessage());
-        }
+        // Effectuez la mise à jour dans la base de données
+        updateArtistInDatabase(table, exposition,nclient,datee, statut);
 
       
     }//GEN-LAST:event_jButton2ActionPerformed
 
+  /*  private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {                                         
+    String table = IDtable.getSelectedItem().toString(); 
+    String exposition = IDexposition.getSelectedItem().toString();
+    String nclient = client.getText();
+    Date datee = datev.getDate(); // Utilisez la date directement sans la formater en chaîne de caractères
+    String statut = status.getSelectedItem().toString();
+
+    // Effectuez la mise à jour dans la base de données
+    updateArtistInDatabase(table, exposition, nclient, datee, statut);
+}
+*/
+    
+public void setArtistData(String idToUpdate, String table, String exposition, String nclient, String date2, String statut) {
+    this.idToUpdate = idToUpdate;
+
+    try {
+        // Stockez les valeurs récupérées dans des variables
+        String selectedTable = table;
+        String selectedExposition = exposition;
+        String selectedClient = nclient;
+   
+        
+        Date date = new SimpleDateFormat("yyyy-MM-dd").parse(date2);
+        datev.setDate(date);
+        String selectedStatut = statut;
+
+        // Définissez les valeurs des éléments de l'interface utilisateur
+        IDtable.setSelectedItem(selectedTable);
+        IDexposition.setSelectedItem(selectedExposition);
+        client.setText(selectedClient);
+        //datev.setDate(parsedDate);
+        status.setSelectedItem(selectedStatut);
+
+    } catch (ParseException ex) {
+        Logger.getLogger(Update_Exposition.class.getName()).log(Level.SEVERE, null, ex);
+    }    
+}
+
+private void updateArtistInDatabase( String table, String exposition, String nclient, String date2, String statut) {
+        try {
+            // Préparez la requête SQL pour mettre à jour l'artiste
+            String query = "UPDATE transaction SET idOeuvre=?, idExposition=?,nomClient=?,dateVente=?,statut=? WHERE idT=?";
+            pst = (PreparedStatement) con.prepareStatement(query);
+            pst.setString(1, table);
+            pst.setString(2, exposition);
+            pst.setString(3, nclient);
+            pst.setString(4, date2);
+            pst.setString(5, statut);
+
+            // Set the idToUpdate in the query
+            pst.setString(6, idToUpdate);
+
+            // Exécutez la requête de mise à jour
+            int rowsAffected = pst.executeUpdate();
+
+            // Rest of your method...
+        } catch (SQLException ex) {
+            Logger.getLogger(Update_Arrr.class.getName()).log(Level.SEVERE, null, ex);
+        }
+   }
+ 
     public void LoadId2(){
         try {
             pst = (PreparedStatement) con.prepareStatement("SELECT idO FROM oeuvre");
@@ -323,6 +371,10 @@ String ImgPath =null;
         
     }//GEN-LAST:event_IDtableActionPerformed
 
+    private void statusActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_statusActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_statusActionPerformed
+
  
     /**
      * @param args the command line arguments
@@ -342,14 +394,30 @@ String ImgPath =null;
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(Add_Transition.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Update_Transition.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(Add_Transition.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Update_Transition.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(Add_Transition.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Update_Transition.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(Add_Transition.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Update_Transition.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
         //</editor-fold>
         //</editor-fold>
         //</editor-fold>
@@ -370,7 +438,7 @@ String ImgPath =null;
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new Add_Transition().setVisible(true);
+                new Update_Transition().setVisible(true);
             }
         });
     }
@@ -379,7 +447,7 @@ String ImgPath =null;
     private javax.swing.JComboBox<String> IDexposition;
     private javax.swing.JComboBox<String> IDtable;
     private javax.swing.JTextField client;
-    private com.toedter.calendar.JDateChooser date;
+    private com.toedter.calendar.JDateChooser datev;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JLabel jLabel12;

@@ -17,18 +17,19 @@ import javaswingdev.form.Form_Dashboard;
 
 import javaswingdev.form.Artistes;
 import javaswingdev.form.Artistes;
-import javaswingdev.form.Exposition;
 import javax.swing.JOptionPane;
 /**
  *
  * @author ME1
  */
-public class Add_Exposition extends javax.swing.JFrame {
+public class Update_Exposition extends javax.swing.JFrame {
+      private String idToUpdate;
+
 
     /**
      * Creates new form login
      */
-    public Add_Exposition() {
+    public Update_Exposition() {
         initComponents();
         name.setBackground(new java.awt.Color(0,0,0,1));
         location.setBackground(new java.awt.Color(0,0,0,1));
@@ -88,8 +89,8 @@ PreparedStatement pst;
         jLabel3.setFont(new java.awt.Font("Segoe UI", 0, 32)); // NOI18N
         jLabel3.setForeground(new java.awt.Color(255, 255, 255));
         jLabel3.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel3.setText("Add Exposition");
-        jPanel2.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 10, 420, 41));
+        jLabel3.setText("Update Exposition");
+        jPanel2.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 10, 420, 41));
 
         jLabel5.setFont(new java.awt.Font("Segoe UI", 0, 13)); // NOI18N
         jLabel5.setForeground(new java.awt.Color(199, 226, 255));
@@ -141,7 +142,7 @@ PreparedStatement pst;
 
         jButton2.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jButton2.setForeground(new java.awt.Color(25, 118, 211));
-        jButton2.setText("Add");
+        jButton2.setText("Update");
         jButton2.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         jButton2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -196,41 +197,60 @@ PreparedStatement pst;
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        try {
-            // TODO add your handling code here:
-            String nom = name.getText();
-            //String dateNaissance = txtusername2.getText();
-            Date dateDebut = Sdate.getDate();
-           SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-           String startdate = dateFormat.format(dateDebut);
-            Date dateFin = Edate.getDate();
-           SimpleDateFormat dateFormat1 = new SimpleDateFormat("yyyy-MM-dd");
-           String enddate = dateFormat1.format(dateFin);
-           String lieu = location.getText();
-
-            pst = (PreparedStatement) con.prepareStatement("INSERT INTO exposition (nom, dateDebut, dateFin,lieu) VALUES (?,?, ?, ?)");
-            pst.setString(1, nom);
-            pst.setString(2, startdate);
-            pst.setString(3, enddate); // Set the third parameter
-            pst.setString(4, lieu); // Set the third parameter
-            int k = pst.executeUpdate();
-            if (k == 1) {
-                JOptionPane.showMessageDialog(this, "Record Added Successfully!");
-                name.setText("");
-                Sdate.setDate(null);
-                Edate.setDate(null);
-                location.setText("");
-
-            } else {
-                JOptionPane.showMessageDialog(this, "Record Failed!");
-            }
-        } catch (SQLException ex) {
-            Logger.getLogger(Add_Exposition.class.getName()).log(Level.SEVERE, null, ex);
-        }
         
+        String nom = name.getText();
+        Date date = Sdate.getDate();
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        String dateDebut = dateFormat.format(date);
+        Date date1 = Edate.getDate();
+        SimpleDateFormat dateFormat2 = new SimpleDateFormat("yyyy-MM-dd");
+        String dateEnd = dateFormat2.format(date1);
+        String lieu = location.getText();
+
+        // Effectuez la mise à jour dans la base de données
+        updateArtistInDatabase(nom, dateDebut, dateEnd, lieu);
+
     }//GEN-LAST:event_jButton2ActionPerformed
 
- 
+ public void setArtistData(String idToUpdate, String nom, String dateD, String dateF,String lieu) {
+                this.idToUpdate = idToUpdate;
+
+         
+        // Utilisez SimpleDateFormat pour convertir la date de naissance de String en Date
+        try {
+            name.setText(nom);
+           // Sdate.setText(dateD);
+            Date date = new SimpleDateFormat("yyyy-MM-dd").parse(dateD);
+            Sdate.setDate(date);
+            Date date1 = new SimpleDateFormat("yyyy-MM-dd").parse(dateF);
+            Edate.setDate(date);
+            location.setText(lieu);
+
+        } catch (ParseException ex) {
+            Logger.getLogger(Update_Exposition.class.getName()).log(Level.SEVERE, null, ex);
+        }    }
+
+    private void updateArtistInDatabase(String nom, String Sdate, String Edate,String lieu) {
+        try {
+            // Préparez la requête SQL pour mettre à jour l'artiste
+            String query = "UPDATE exposition SET nom=?, dateDebut=?,dateFin=?,lieu=? WHERE idE=?";
+            pst = (PreparedStatement) con.prepareStatement(query);
+            pst.setString(1, nom);
+            pst.setString(2, Sdate);
+            pst.setString(3, Edate);
+            pst.setString(4, lieu);
+
+            // Set the idToUpdate in the query
+            pst.setString(5, idToUpdate);
+
+            // Exécutez la requête de mise à jour
+            int rowsAffected = pst.executeUpdate();
+
+            // Rest of your method...
+        } catch (SQLException ex) {
+            Logger.getLogger(Update_Arrr.class.getName()).log(Level.SEVERE, null, ex);
+        }
+   }
     /**
      * @param args the command line arguments
      */
@@ -249,14 +269,22 @@ PreparedStatement pst;
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(Add_Exposition.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Update_Exposition.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(Add_Exposition.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Update_Exposition.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(Add_Exposition.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Update_Exposition.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(Add_Exposition.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Update_Exposition.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
         //</editor-fold>
         //</editor-fold>
         //</editor-fold>
@@ -269,7 +297,7 @@ PreparedStatement pst;
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new Add_Exposition().setVisible(true);
+                new Update_Exposition().setVisible(true);
             }
         });
     }

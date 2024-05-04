@@ -78,7 +78,7 @@ String ImgPath =null;
 }
    public void LoadId(){
         try {
-            pst = (PreparedStatement) con.prepareStatement("SELECT idAr FROM artiste");
+            pst = (PreparedStatement) con.prepareStatement("SELECT nom FROM artiste");
             rs = pst.executeQuery();
             IDlist.removeAllItems();
             while(rs.next()){
