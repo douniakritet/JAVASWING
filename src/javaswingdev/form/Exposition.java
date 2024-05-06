@@ -1,6 +1,9 @@
 package javaswingdev.form;
 
+<<<<<<< HEAD
 import com.mysql.jdbc.PreparedStatement;
+=======
+>>>>>>> eb6a8018b53d829efca6221b1e8cff18ad645d80
 import java.awt.Component;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -20,10 +23,13 @@ import raven.cell.TableActionCellEditor;
 import raven.cell.TableActionCellRender;
 import raven.cell.TableActionEvent;
 import java.sql.Date;
+<<<<<<< HEAD
 import javaswingdev.main.Update_Arrr;
 import javaswingdev.main.Update_Exposition;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
+=======
+>>>>>>> eb6a8018b53d829efca6221b1e8cff18ad645d80
 public class Exposition extends javax.swing.JPanel {
 
     public Exposition() {
@@ -35,6 +41,7 @@ public class Exposition extends javax.swing.JPanel {
 TableActionEvent event = new TableActionEvent() {
             @Override
             public void onEdit(int row) {
+<<<<<<< HEAD
                 int row4 = table.getSelectedRow();
             if (row != -1) {
                 String idToUpdate = table.getModel().getValueAt(row, 0).toString();
@@ -91,6 +98,19 @@ TableActionEvent event = new TableActionEvent() {
         // You might want to show an error message to the user here
     }
 }
+=======
+                System.out.println("Edit row : " + row);
+            }
+
+            @Override
+            public void onDelete(int row) {
+                if (table.isEditing()) {
+                    table.getCellEditor().stopCellEditing();
+                }
+                DefaultTableModel model = (DefaultTableModel) table.getModel();
+                model.removeRow(row);
+            }
+>>>>>>> eb6a8018b53d829efca6221b1e8cff18ad645d80
 
             
         };
@@ -315,11 +335,18 @@ java.sql.PreparedStatement pst;
     private void searchExposition(String searchTerm) {
     try {
         // Prepare the SQL statement to search for expositions
+<<<<<<< HEAD
         String query = "SELECT * FROM exposition WHERE nom LIKE ? OR lieu LIKE ? OR idE LIKE ?";
         pst = con.prepareStatement(query);
         pst.setString(1, "%" + searchTerm + "%"); // Search by name
         pst.setString(2, "%" + searchTerm + "%"); // Search by location
         pst.setString(3, "%" + searchTerm + "%"); // Search by idE
+=======
+        String query = "SELECT * FROM exposition WHERE nom LIKE ? OR lieu LIKE ?";
+        pst = con.prepareStatement(query);
+        pst.setString(1, "%" + searchTerm + "%"); // Search by name
+        pst.setString(2, "%" + searchTerm + "%"); // Search by location
+>>>>>>> eb6a8018b53d829efca6221b1e8cff18ad645d80
         rs = pst.executeQuery();
 
         // Clear the table before adding search results
@@ -340,11 +367,18 @@ java.sql.PreparedStatement pst;
         Logger.getLogger(Exposition.class.getName()).log(Level.SEVERE, null, ex);
     }
 }
+<<<<<<< HEAD
 
 private void textFieldAnimation1ActionPerformed(java.awt.event.ActionEvent evt) {                                                    
     String searchTerm = textFieldAnimation1.getText().trim();
     searchExposition(searchTerm);
 }
+=======
+    private void textFieldAnimation1ActionPerformed(java.awt.event.ActionEvent evt) {                                                    
+        String searchTerm = textFieldAnimation1.getText().trim();
+    searchExposition(searchTerm);
+    }                                                   
+>>>>>>> eb6a8018b53d829efca6221b1e8cff18ad645d80
 
     // Variables declaration - do not modify                     
     private javaswingdev.card.Card card1;
@@ -356,4 +390,8 @@ private void textFieldAnimation1ActionPerformed(java.awt.event.ActionEvent evt) 
     private javaswingdev.swing.table.Table table;
     private swing.TextFieldAnimation textFieldAnimation1;
     // End of variables declaration                   
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> eb6a8018b53d829efca6221b1e8cff18ad645d80

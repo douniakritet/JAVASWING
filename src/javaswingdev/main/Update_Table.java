@@ -6,12 +6,18 @@
 package javaswingdev.main;
 import com.mysql.jdbc.PreparedStatement;
 import java.awt.Image;
+<<<<<<< HEAD
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.ObjectOutputStream;
+=======
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStream;
+>>>>>>> eb6a8018b53d829efca6221b1e8cff18ad645d80
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -37,16 +43,22 @@ import javax.swing.filechooser.FileNameExtensionFilter;
  * @author ME1
  */
 public class Update_Table extends javax.swing.JFrame {
+<<<<<<< HEAD
           private Connection con;
     private PreparedStatement pst;
     private String idToUpdate;
     private String ImgPath = null;
+=======
+          private String idToUpdate;
+
+>>>>>>> eb6a8018b53d829efca6221b1e8cff18ad645d80
 
     /**
      * Creates new form login
      */
     public Update_Table() {
         initComponents();
+<<<<<<< HEAD
         Connect();
         LoadId();
     }
@@ -86,6 +98,61 @@ public class Update_Table extends javax.swing.JFrame {
         ImageIcon image = new ImageIcon(img2);
         return image;
     }
+=======
+       // txtusername.setBackground(new java.awt.Color(0,0,0,1));
+       // txtusername1.setBackground(new java.awt.Color(0,0,0,1));
+       // jDateChooser1.setBackground(new java.awt.Color(0,0,0,1));
+        Connect();
+        LoadId();
+    }
+Connection con;
+PreparedStatement pst;
+String ImgPath =null;
+   ResultSet rs;
+
+    public void Connect(){
+        try {
+            Class.forName("com.mysql.jdbc.Driver");
+            con = DriverManager.getConnection("jdbc:mysql://localhost/art","root","");
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(Artistes.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex) {
+            Logger.getLogger(Artistes.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+   public ImageIcon ResizeImage(String imagePath, byte[] pic) {
+    ImageIcon myImage = null;
+    if (imagePath != null) {
+        myImage = new ImageIcon(imagePath);
+    } else {
+        myImage = new ImageIcon(pic);
+    }
+
+    Image img = myImage.getImage();
+
+    // Resize the image to the specified width and height
+    Image img2 = img.getScaledInstance(image.getWidth(), image.getHeight(), Image.SCALE_SMOOTH);
+
+    ImageIcon image = new ImageIcon(img2);
+    return image;
+}
+   public void LoadId(){
+        try {
+            pst = (PreparedStatement) con.prepareStatement("SELECT idAr FROM artiste");
+            rs = pst.executeQuery();
+            IDlist.removeAllItems();
+            while(rs.next()){
+            IDlist.addItem(rs.getString(1));
+            }
+
+        } catch (SQLException ex) {
+            Logger.getLogger(Update_Table.class.getName()).log(Level.SEVERE, null, ex);
+        }
+   
+   
+   }
+   
+>>>>>>> eb6a8018b53d829efca6221b1e8cff18ad645d80
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -287,6 +354,7 @@ public boolean checkInputs() {
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
                                                
+<<<<<<< HEAD
           if (checkInputs()) {
         String artiste = IDlist.getSelectedItem().toString();
         String titre = title.getText();
@@ -305,10 +373,29 @@ public boolean checkInputs() {
         }
     } else {
         JOptionPane.showMessageDialog(this, "One or more fields are empty");
+=======
+  if (checkInputs() /*&& ImgPath != null*/) {
+       String artiste = IDlist.getSelectedItem().toString(); 
+       String titre = xx.getText(); 
+
+  
+        Date date1 = date.getDate();
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        String datee = dateFormat.format(date1);
+        
+        String desc = description.getText();
+        String price = prix.getText();
+        String img = image.getText();
+
+        // Effectuez la mise à jour dans la base de données
+        updateArtistInDatabase(artiste,titre,datee,desc,price,img);
+      
+>>>>>>> eb6a8018b53d829efca6221b1e8cff18ad645d80
     }//GEN-LAST:event_jButton2ActionPerformed
 
     }
     
+<<<<<<< HEAD
     private ImageIcon ResizeImage(String imagePath) {
     ImageIcon myImage = new ImageIcon(imagePath);
     Image img = myImage.getImage();
@@ -356,6 +443,32 @@ private byte[] getImageBytes(ImageIcon imageIcon) {
     }
 }
 
+=======
+    public void setArtistData(String idToUpdate, String artiste, String titre, String date2,String desc, String price, String img) {
+                this.idToUpdate = idToUpdate;
+
+         
+        // Utilisez SimpleDateFormat pour convertir la date de naissance de String en Date
+        try {
+        // Stockez les valeurs récupérées dans des variables
+        String selectedTable = artiste;
+        title.setText(titre);
+   
+        Date date1 = new SimpleDateFormat("yyyy-MM-dd").parse(date2);
+        date.setDate(date1);
+        
+        description.setText(desc);
+        prix.setText(price);
+ImageIcon icon = new ImageIcon(img);
+image.setIcon(icon);
+        // Définissez les valeurs des éléments de l'interface utilisateur
+        IDlist.setSelectedItem(selectedTable);
+      
+
+    } catch (ParseException ex) {
+        Logger.getLogger(Update_Exposition.class.getName()).log(Level.SEVERE, null, ex);
+    }    }
+>>>>>>> eb6a8018b53d829efca6221b1e8cff18ad645d80
    /* public void setArtistData(String idToUpdate, String artiste, String titre, String date2, String desc, String price, String imgPath) {
     this.idToUpdate = idToUpdate;
 
@@ -393,6 +506,7 @@ private byte[] getImageBytes(ImageIcon imageIcon) {
 }*/
 
     
+<<<<<<< HEAD
 private void updateArtistInDatabase(String artiste, String title, String date, String desc, String price, String imagePath) {
     try {
         String query;
@@ -445,6 +559,48 @@ private void updateArtistInDatabase(String artiste, String title, String date, S
         } else {
             System.out.println("No File Selected!");
         }
+=======
+    
+    private void updateArtistInDatabase( String artiste, String title, String date, String desc, String price,String img) {
+        try {
+            // Préparez la requête SQL pour mettre à jour l'artiste
+            String query = "UPDATE oeuvre SET idArtiste=?, titre=?,aneeCreation=?,description=?,prix=?,image=? WHERE idO=?";
+            pst = (PreparedStatement) con.prepareStatement(query);
+            pst.setString(1, artiste);
+            pst.setString(2, title);
+            pst.setString(3, date);
+            pst.setString(4, desc);
+            pst.setString(5, price);
+            pst.setString(6, img);
+
+            // Set the idToUpdate in the query
+            pst.setString(7, idToUpdate);
+
+            // Exécutez la requête de mise à jour
+            int rowsAffected = pst.executeUpdate();
+
+            // Rest of your method...
+        } catch (SQLException ex) {
+            Logger.getLogger(Update_Arrr.class.getName()).log(Level.SEVERE, null, ex);
+        }
+   }
+    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+        // TODO add your handling code here:
+        JFileChooser file = new JFileChooser();
+    file.setCurrentDirectory(new File(System.getProperty("user.home")));
+    FileNameExtensionFilter filter = new FileNameExtensionFilter("*.images", "jpg", "png");
+    file.addChoosableFileFilter(filter);
+    int result = file.showSaveDialog(null);
+    if (result == JFileChooser.APPROVE_OPTION) {
+        File selectedFile = file.getSelectedFile();
+        ImgPath = selectedFile.getAbsolutePath(); // Mise à jour de ImgPath avec le chemin d'accès sélectionné
+        String path = ImgPath;
+        image.setIcon(ResizeImage(path, null));
+
+    } else {
+        System.out.println("No File Selected!");
+    }
+>>>>>>> eb6a8018b53d829efca6221b1e8cff18ad645d80
     }//GEN-LAST:event_jButton3ActionPerformed
 
     private void descriptionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_descriptionActionPerformed

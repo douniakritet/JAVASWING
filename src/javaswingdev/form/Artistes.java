@@ -494,6 +494,7 @@ java.sql.PreparedStatement pst;
         // Add more specific error handling or logging here
     }
     }                                                
+<<<<<<< HEAD
 private void searchArtist(String searchTerm) {
     try {
         // Prepare the SQL statement to search for artists
@@ -502,6 +503,16 @@ private void searchArtist(String searchTerm) {
         pst.setString(1, "%" + searchTerm + "%"); // Search by name
         pst.setString(2, "%" + searchTerm + "%"); // Search by nationality
         pst.setString(3, searchTerm); // Search by idAr
+=======
+
+    private void searchArtist(String searchTerm) {
+    try {
+        // Prepare the SQL statement to search for artists
+        String query = "SELECT * FROM artiste WHERE nom LIKE ? OR nationalite LIKE ?";
+        pst = con.prepareStatement(query);
+        pst.setString(1, "%" + searchTerm + "%"); // Search by name
+        pst.setString(2, "%" + searchTerm + "%"); // Search by nationality
+>>>>>>> eb6a8018b53d829efca6221b1e8cff18ad645d80
         rs = pst.executeQuery();
 
         // Clear the table before adding search results

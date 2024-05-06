@@ -1,6 +1,9 @@
 package javaswingdev.form;
 
+<<<<<<< HEAD
 import com.mysql.jdbc.PreparedStatement;
+=======
+>>>>>>> eb6a8018b53d829efca6221b1e8cff18ad645d80
 import java.awt.Component;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -24,11 +27,14 @@ import javax.swing.table.DefaultTableModel;
 import raven.cell.TableActionCellEditor;
 import raven.cell.TableActionCellRender;
 import raven.cell.TableActionEvent;
+<<<<<<< HEAD
 import swing.EventCallBack;
 import swing.EventTextField;
 import swing.TextFieldAnimation;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+=======
+>>>>>>> eb6a8018b53d829efca6221b1e8cff18ad645d80
 
 public class Tables extends javax.swing.JPanel {
 
@@ -37,6 +43,7 @@ public class Tables extends javax.swing.JPanel {
         init();
         Connect();
         Fetch();
+<<<<<<< HEAD
         
         textFieldAnimation2.addActionListener(new ActionListener() {
     @Override
@@ -46,6 +53,8 @@ public class Tables extends javax.swing.JPanel {
     }
 });
         
+=======
+>>>>>>> eb6a8018b53d829efca6221b1e8cff18ad645d80
         TableActionEvent event = new TableActionEvent() {
             @Override
             public void onEdit(int row) {
@@ -70,6 +79,7 @@ public class Tables extends javax.swing.JPanel {
 
             @Override
             public void onDelete(int row) {
+<<<<<<< HEAD
     if (table.isEditing()) {
         table.getCellEditor().stopCellEditing();
     }
@@ -108,6 +118,14 @@ public class Tables extends javax.swing.JPanel {
 }
 
 
+=======
+                if (table.isEditing()) {
+                    table.getCellEditor().stopCellEditing();
+                }
+                DefaultTableModel model = (DefaultTableModel) table.getModel();
+                model.removeRow(row);
+            }
+>>>>>>> eb6a8018b53d829efca6221b1e8cff18ad645d80
 
             
         };
@@ -185,7 +203,10 @@ Connection con;
             Logger.getLogger(Artistes.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+<<<<<<< HEAD
     
+=======
+>>>>>>> eb6a8018b53d829efca6221b1e8cff18ad645d80
     private void Fetch(){
     int q;
     try {
@@ -210,7 +231,11 @@ Connection con;
 }
 
     @SuppressWarnings("unchecked")
+<<<<<<< HEAD
     // <editor-fold defaultstate="collapsed" desc="Generated Code">                          
+=======
+    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
+>>>>>>> eb6a8018b53d829efca6221b1e8cff18ad645d80
     private void initComponents() {
 
         card1 = new javaswingdev.card.Card();
@@ -323,9 +348,15 @@ Connection con;
                 .addComponent(roundPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGap(30, 30, 30))
         );
+<<<<<<< HEAD
     }// </editor-fold>                        
 
     private void jButton3jButton1ActionPerformed(java.awt.event.ActionEvent evt) {                                                 
+=======
+    }// </editor-fold>//GEN-END:initComponents
+
+    private void jButton3jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3jButton1ActionPerformed
+>>>>>>> eb6a8018b53d829efca6221b1e8cff18ad645d80
         // TODO add your handling code here:
         try {
             setVisible(false);
@@ -337,6 +368,7 @@ Connection con;
             ex.printStackTrace();
             // Add more specific error handling or logging here
         }
+<<<<<<< HEAD
     }                                                
 
   public void actionPerformed(ActionEvent e) {
@@ -377,6 +409,11 @@ private void searchTable(String searchTerm) {
 
 
     // Variables declaration - do not modify                     
+=======
+    }//GEN-LAST:event_jButton3jButton1ActionPerformed
+
+    // Variables declaration - do not modify//GEN-BEGIN:variables
+>>>>>>> eb6a8018b53d829efca6221b1e8cff18ad645d80
     private javaswingdev.card.Card card1;
     private javaswingdev.card.Card card2;
     private javaswingdev.card.Card card3;
@@ -385,5 +422,10 @@ private void searchTable(String searchTerm) {
     private javaswingdev.swing.RoundPanel roundPanel1;
     private javaswingdev.swing.table.Table table;
     private swing.TextFieldAnimation textFieldAnimation2;
+<<<<<<< HEAD
     // End of variables declaration                   
 }
+=======
+    // End of variables declaration//GEN-END:variables
+}
+>>>>>>> eb6a8018b53d829efca6221b1e8cff18ad645d80
